@@ -1,0 +1,20 @@
+---
+- name: Package prerequisites for node.js
+  apt: pkg=python-software-properties state=present
+  sudo: yes
+  tags: nodejs
+
+- name: Add the Node.js PPA
+  apt_repository: repo='ppa:chris-lea/node.js' state=present
+  sudo: yes
+  tags: nodejs
+
+- name: Install Node.js and npm
+  apt: pkg=nodejs update-cache=yes
+  sudo: yes
+  tags: nodejs
+
+- name: Install nodemon
+  npm: name=nodemon global=yes
+  sudo: yes
+  tags: nodejs

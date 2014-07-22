@@ -1,0 +1,11 @@
+---
+- name: Update sudoers
+  sudo: yes
+  template: src=sudoers dest=/etc/sudoers validate="visudo -cf %s"
+  tags: users
+
+- name: reload ssh
+  sudo: yes
+  shell: 
+    reload ssh
+  tags: users

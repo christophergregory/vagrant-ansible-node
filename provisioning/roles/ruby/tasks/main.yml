@@ -1,0 +1,16 @@
+---
+- name: Install Ruby
+  apt: pkg=ruby state=latest update-cache=yes
+  sudo: yes
+  tags: ruby
+
+# - name: Install compass gem
+#   gem: name=compass state=latest
+#   sudo: yes
+#   tags: ruby
+
+# installation with gem module is not working, may need to look into that
+- name: Install compass gem
+  command: gem install compass
+  sudo: yes
+  tags: ruby

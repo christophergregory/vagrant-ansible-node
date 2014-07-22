@@ -1,0 +1,6 @@
+---
+src_root: /home/{{ansible_user_id}}/src
+src_root: /home/{{ansible_user_id}}/application
+nginx_hostname: myapp
+node_port: 3000
+web_project_name: myapp

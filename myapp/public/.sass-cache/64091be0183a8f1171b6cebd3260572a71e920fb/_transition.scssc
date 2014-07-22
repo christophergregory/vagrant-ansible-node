@@ -1,0 +1,775 @@
+3.2.19 (Media Mark)
+77c479240b27e28f77813fb2a5017cc40bf3e30c
+o:Sass::Tree::RootNode
+:@templateI"§ @import "shared";
+
+// CSS Transitions
+// Currently only works in Webkit.
+//
+// * expected in CSS3, FireFox 3.6/7 and Opera Presto 2.3
+// * We'll be prepared.
+//
+// Including this submodule sets following defaults for the mixins:
+//
+//     $default-transition-property : all
+//     $default-transition-duration : 1s
+//     $default-transition-function : false
+//     $default-transition-delay    : false
+//
+// Override them if you like. Timing-function and delay are set to false for browser defaults (ease, 0s).
+
+$default-transition-property: all !default;
+
+$default-transition-duration: 1s !default;
+
+$default-transition-function: false !default;
+
+$default-transition-delay: false !default;
+
+$transitionable-prefixed-values: transform, transform-origin !default;
+
+// One or more properties to transition
+//
+// * for multiple, use a comma-delimited list
+// * also accepts "all" or "none"
+
+@mixin transition-property($property-1: $default-transition-property,
+  $property-2 : false,
+  $property-3 : false,
+  $property-4 : false,
+  $property-5 : false,
+  $property-6 : false,
+  $property-7 : false,
+  $property-8 : false,
+  $property-9 : false,
+  $property-10: false
+) {
+  @if type-of($property-1) == string { $property-1: unquote($property-1); }
+  $properties: compact($property-1, $property-2, $property-3, $property-4, $property-5, $property-6, $property-7, $property-8, $property-9, $property-10);
+  @if $experimental-support-for-webkit    {       -webkit-transition-property : prefixed-for-transition(-webkit, $properties); }
+  @if $experimental-support-for-mozilla   {          -moz-transition-property : prefixed-for-transition(-moz,    $properties); }
+  @if $experimental-support-for-opera     {            -o-transition-property : prefixed-for-transition(-o,      $properties); }
+                                                          transition-property : $properties;
+}
+
+// One or more durations in seconds
+//
+// * for multiple, use a comma-delimited list
+// * these durations will affect the properties in the same list position
+
+@mixin transition-duration($duration-1: $default-transition-duration,
+  $duration-2 : false,
+  $duration-3 : false,
+  $duration-4 : false,
+  $duration-5 : false,
+  $duration-6 : false,
+  $duration-7 : false,
+  $duration-8 : false,
+  $duration-9 : false,
+  $duration-10: false
+) {
+  @if type-of($duration-1) == string { $duration-1: unquote($duration-1); }
+  $durations: compact($duration-1, $duration-2, $duration-3, $duration-4, $duration-5, $duration-6, $duration-7, $duration-8, $duration-9, $duration-10);
+  @include experimental(transition-duration, $durations,
+    -moz, -webkit, -o, not -ms, not -khtml, official
+  );
+}
+
+// One or more timing functions
+//
+// * [ ease | linear | ease-in | ease-out | ease-in-out | cubic-bezier(x1, y1, x2, y2)]
+// * For multiple, use a comma-delimited list
+// * These functions will effect the properties in the same list position
+
+@mixin transition-timing-function($function-1: $default-transition-function,
+  $function-2 : false,
+  $function-3 : false,
+  $function-4 : false,
+  $function-5 : false,
+  $function-6 : false,
+  $function-7 : false,
+  $function-8 : false,
+  $function-9 : false,
+  $function-10: false
+) {
+  $function-1: unquote($function-1);
+  $functions: compact($function-1, $function-2, $function-3, $function-4, $function-5, $function-6, $function-7, $function-8, $function-9, $function-10);
+  @include experimental(transition-timing-function, $functions,
+    -moz, -webkit, -o, not -ms, not -khtml, official
+  );
+}
+
+// One or more transition-delays in seconds
+//
+// * for multiple, use a comma-delimited list
+// * these delays will effect the properties in the same list position
+
+@mixin transition-delay($delay-1: $default-transition-delay,
+  $delay-2 : false,
+  $delay-3 : false,
+  $delay-4 : false,
+  $delay-5 : false,
+  $delay-6 : false,
+  $delay-7 : false,
+  $delay-8 : false,
+  $delay-9 : false,
+  $delay-10: false
+) {
+  @if type-of($delay-1) == string { $delay-1: unquote($delay-1); }
+  $delays: compact($delay-1, $delay-2, $delay-3, $delay-4, $delay-5, $delay-6, $delay-7, $delay-8, $delay-9, $delay-10);
+  @include experimental(transition-delay, $delays,
+    -moz, -webkit, -o, not -ms, not -khtml, official
+  );
+}
+
+// Transition all-in-one shorthand
+
+@mixin single-transition(
+  $property: $default-transition-property,
+  $duration: $default-transition-duration,
+  $function: $default-transition-function,
+  $delay: $default-transition-delay
+) {
+  @include transition(compact($property $duration $function $delay));
+}
+
+@mixin transition(
+  $transition-1 : default,
+  $transition-2 : false,
+  $transition-3 : false,
+  $transition-4 : false,
+  $transition-5 : false,
+  $transition-6 : false,
+  $transition-7 : false,
+  $transition-8 : false,
+  $transition-9 : false,
+  $transition-10: false
+) {
+  @if $transition-1 == default {
+    $transition-1 : compact($default-transition-property $default-transition-duration $default-transition-function $default-transition-delay);
+  }
+  $transitions: false;
+  @if type-of($transition-1) == list and type-of(nth($transition-1,1)) == list {
+    $transitions: join($transition-1, compact($transition-2, $transition-3, $transition-4, $transition-5, $transition-6, $transition-7, $transition-8, $transition-9, $transition-10), comma);
+  } @else {
+    $transitions : compact($transition-1, $transition-2, $transition-3, $transition-4, $transition-5, $transition-6, $transition-7, $transition-8, $transition-9, $transition-10);
+  }
+  $delays: comma-list();
+  $has-delays: false;
+  $webkit-value: comma-list();
+  $moz-value: comma-list();
+  $o-value: comma-list();
+
+  // This block can be made considerably simpler at the point in time that
+  // we no longer need to deal with the differences in how delays are treated.
+  @each $transition in $transitions {
+    // Extract the values from the list
+    // (this would be cleaner if nth took a 3rd argument to provide a default value).
+    $property: nth($transition, 1);
+    $duration: false;
+    $timing-function: false;
+    $delay: false;
+    @if length($transition) > 1 { $duration:        nth($transition, 2); }
+    @if length($transition) > 2 { $timing-function: nth($transition, 3); }
+    @if length($transition) > 3 { $delay:           nth($transition, 4); $has-delays: true; }
+
+    // If a delay is provided without a timing function
+    @if is-time($timing-function) and not $delay { $delay: $timing-function; $timing-function: false; $has-delays: true; }
+
+    // Keep a list of delays in case one is specified
+    $delays: append($delays, if($delay, $delay, 0s));
+
+    $webkit-value: append($webkit-value, compact(prefixed-for-transition(-webkit, $property) $duration $timing-function));
+       $moz-value: append(   $moz-value, compact(prefixed-for-transition(   -moz, $property) $duration $timing-function $delay));
+         $o-value: append(     $o-value, compact(prefixed-for-transition(     -o, $property) $duration $timing-function $delay));
+  }
+
+  @if $experimental-support-for-webkit    {       -webkit-transition : $webkit-value;
+    // old webkit doesn't support the delay parameter in the shorthand so we progressively enhance it.
+    @if $has-delays                       { -webkit-transition-delay : $delays;       } }
+  @if $experimental-support-for-mozilla   {          -moz-transition : $moz-value;    }
+  @if $experimental-support-for-opera     {            -o-transition : $o-value;      }
+                                                          transition : $transitions;
+}
+
+// coerce a list to be comma delimited or make a new, empty comma delimited list.
+@function comma-list($list: ()) {
+  @return join((), $list, comma);
+}
+
+// Returns `$property` with the given prefix if it is found in `$transitionable-prefixed-values`.
+@function prefixed-for-transition($prefix, $property) {
+  @if type-of($property) == list {
+    $new-list: comma-list();
+    @each $v in $property {
+      $new-list: append($new-list, prefixed-for-transition($prefix, $v));
+    }
+    @return $new-list;
+  } @else {
+    @if index($transitionable-prefixed-values, $property) {
+      @return #{$prefix}-#{$property};
+    } @else {
+      @return $property;
+    }
+  }
+}
+
+// Checks if the value given is a unit of time.
+@function is-time($value) {
+  @if type-of($value) == number {
+    @return not not index(s ms, unit($value));
+  } @else {
+    @return false;
+  }
+}
+:ET:@has_childrenT:
+@linei:@options{ :@children[o:Sass::Tree::ImportNode;0:@imported_file0;	i;
+@;[ :@imported_filenameI"shared;To:Sass::Tree::CommentNode
+:@value[I"Ô/* CSS Transitions
+ * Currently only works in Webkit.
+ *
+ * * expected in CSS3, FireFox 3.6/7 and Opera Presto 2.3
+ * * We'll be prepared.
+ *
+ * Including this submodule sets following defaults for the mixins:
+ *
+ *     $default-transition-property : all
+ *     $default-transition-duration : 1s
+ *     $default-transition-function : false
+ *     $default-transition-delay    : false
+ *
+ * Override them if you like. Timing-function and delay are set to false for browser defaults (ease, 0s). */;T:
+@type:silent;	i;
+@;[ o:Sass::Tree::VariableNode;
+@;	i:
+@nameI" default-transition-property;T:
+@expro:Sass::Script::String	;I"all;T;	i;
+@;:identifier;[ :@guardedI"!default;To;;
+@;	i;I" default-transition-duration;T;o:Sass::Script::Number:@originalI"1s;F:@numerator_units[I"s;T;i:@denominator_units[ ;
+@;	i;[ ;I"!default;To;;
+@;	i;I" default-transition-function;T;o:Sass::Script::Bool;	i;
+@;F;[ ;I"!default;To;;
+@;	i;I"default-transition-delay;T;o;;	i;
+@;F;[ ;I"!default;To;;
+@;	i;I"#transitionable-prefixed-values;T;o:Sass::Script::List	:@separator:
+comma;	i;[o;	;I"transform;T;	i;
+@;;o;	;I"transform-origin;T;	i;
+@;;;
+@;[ ;I"!default;To;
+;[I"}/* One or more properties to transition
+ *
+ * * for multiple, use a comma-delimited list
+ * * also accepts "all" or "none" */;T;;;	i!;
+@;[ o:Sass::Tree::MixinDefNode:
+@args[[o:Sass::Script::Variable;I"property-1;T;
+@:@underscored_nameI"property_1;To;#	;I" default-transition-property;T;
+@;	i&;$I" default_transition_property;T[o;#;I"property-2;T;
+@;$I"property_2;To;;	i';
+@;F[o;#;I"property-3;T;
+@;$I"property_3;To;;	i(;
+@;F[o;#;I"property-4;T;
+@;$I"property_4;To;;	i);
+@;F[o;#;I"property-5;T;
+@;$I"property_5;To;;	i*;
+@;F[o;#;I"property-6;T;
+@;$I"property_6;To;;	i+;
+@;F[o;#;I"property-7;T;
+@;$I"property_7;To;;	i,;
+@;F[o;#;I"property-8;T;
+@;$I"property_8;To;;	i-;
+@;F[o;#;I"property-9;T;
+@;$I"property_9;To;;	i.;
+@;F[o;#;I"property-10;T;
+@;$I"property_10;To;;	i/;
+@;F;T;
+@;I"transition-property;T:@splat0;[u:Sass::Tree::IfNode[o:Sass::Script::Operation
+:@operand1o:Sass::Script::Funcall:@keywords{ :
+@args[o:Sass::Script::Variable	:
+@nameI"property-1:ET:@options{ :
+@linei1:@underscored_nameI"property_1;T;I"type-of;T:@splat0;i1;@:@operand2o:Sass::Script::String	:@valueI"string;T;i1;@:
+@type:identifier;@;i1:@operator:eq0[o:Sass::Tree::VariableNode;@;i1;I"property-1;T:
+@expro;;{ ;	[o;
+	;I"property-1;T;@;i1;I"property_1;T;I"unquote;T;0;i1;@:@children[ :@guarded0o;;
+@;	i2;I"properties;T;o:Sass::Script::Funcall:@keywords{ ;"[o;#	;I"property-1;T;
+@;	i2;$I"property_1;To;#	;I"property-2;T;
+@;	i2;$I"property_2;To;#	;I"property-3;T;
+@;	i2;$I"property_3;To;#	;I"property-4;T;
+@;	i2;$I"property_4;To;#	;I"property-5;T;
+@;	i2;$I"property_5;To;#	;I"property-6;T;
+@;	i2;$I"property_6;To;#	;I"property-7;T;
+@;	i2;$I"property_7;To;#	;I"property-8;T;
+@;	i2;$I"property_8;To;#	;I"property-9;T;
+@;	i2;$I"property_9;To;#	;I"property-10;T;
+@;	i2;$I"property_10;T;I"compact;T;%0;	i2;
+@;[ ;0u;&È[o:Sass::Script::Variable	:
+@nameI"$experimental-support-for-webkit:ET:@options{ :
+@linei3:@underscored_nameI"$experimental_support_for_webkit;T0[o:Sass::Tree::PropNode:
+@tabsi :@valueo:Sass::Script::Funcall:@keywords{ :
+@args[o:Sass::Script::String	;I"-webkit;T;	i3;@:
+@type:identifiero; 	;I"properties;T;@;	i3;
+I"properties;T;I"prefixed-for-transition;T:@splat0;	i3;@;@;[I" -webkit-transition-property;T;	i3:@children[ :@prop_syntax:newu;&Â[o:Sass::Script::Variable	:
+@nameI"%experimental-support-for-mozilla:ET:@options{ :
+@linei4:@underscored_nameI"%experimental_support_for_mozilla;T0[o:Sass::Tree::PropNode:
+@tabsi :@valueo:Sass::Script::Funcall:@keywords{ :
+@args[o:Sass::Script::String	;I"	-moz;T;	i4;@:
+@type:identifiero; 	;I"properties;T;@;	i4;
+I"properties;T;I"prefixed-for-transition;T:@splat0;	i4;@;@;[I"-moz-transition-property;T;	i4:@children[ :@prop_syntax:newu;&›[o:Sass::Script::Variable	:
+@nameI"#experimental-support-for-opera:ET:@options{ :
+@linei5:@underscored_nameI"#experimental_support_for_opera;T0[o:Sass::Tree::PropNode:
+@tabsi :@valueo:Sass::Script::Funcall:@keywords{ :
+@args[o:Sass::Script::String	;I"-o;T;	i5;@:
+@type:identifiero; 	;I"properties;T;@;	i5;
+I"properties;T;I"prefixed-for-transition;T:@splat0;	i5;@;@;[I"-o-transition-property;T;	i5:@children[ :@prop_syntax:newo:Sass::Tree::PropNode:
+@tabsi ;o;#	;I"properties;T;
+@;	i6;$I"properties;T;
+@;[I"transition-property;T;	i6;[ :@prop_syntax:new;	i0o;
+;[I"°/* One or more durations in seconds
+ *
+ * * for multiple, use a comma-delimited list
+ * * these durations will affect the properties in the same list position */;T;;;	i9;
+@;[ o;!;"[[o;#;I"duration-1;T;
+@;$I"duration_1;To;#	;I" default-transition-duration;T;
+@;	i>;$I" default_transition_duration;T[o;#;I"duration-2;T;
+@;$I"duration_2;To;;	i?;
+@;F[o;#;I"duration-3;T;
+@;$I"duration_3;To;;	i@;
+@;F[o;#;I"duration-4;T;
+@;$I"duration_4;To;;	iA;
+@;F[o;#;I"duration-5;T;
+@;$I"duration_5;To;;	iB;
+@;F[o;#;I"duration-6;T;
+@;$I"duration_6;To;;	iC;
+@;F[o;#;I"duration-7;T;
+@;$I"duration_7;To;;	iD;
+@;F[o;#;I"duration-8;T;
+@;$I"duration_8;To;;	iE;
+@;F[o;#;I"duration-9;T;
+@;$I"duration_9;To;;	iF;
+@;F[o;#;I"duration-10;T;
+@;$I"duration_10;To;;	iG;
+@;F;T;
+@;I"transition-duration;T;%0;[u;&[o:Sass::Script::Operation
+:@operand1o:Sass::Script::Funcall:@keywords{ :
+@args[o:Sass::Script::Variable	:
+@nameI"duration-1:ET:@options{ :
+@lineiI:@underscored_nameI"duration_1;T;I"type-of;T:@splat0;iI;@:@operand2o:Sass::Script::String	:@valueI"string;T;iI;@:
+@type:identifier;@;iI:@operator:eq0[o:Sass::Tree::VariableNode;@;iI;I"duration-1;T:
+@expro;;{ ;	[o;
+	;I"duration-1;T;@;iI;I"duration_1;T;I"unquote;T;0;iI;@:@children[ :@guarded0o;;
+@;	iJ;I"durations;T;o;';({ ;"[o;#	;I"duration-1;T;
+@;	iJ;$I"duration_1;To;#	;I"duration-2;T;
+@;	iJ;$I"duration_2;To;#	;I"duration-3;T;
+@;	iJ;$I"duration_3;To;#	;I"duration-4;T;
+@;	iJ;$I"duration_4;To;#	;I"duration-5;T;
+@;	iJ;$I"duration_5;To;#	;I"duration-6;T;
+@;	iJ;$I"duration_6;To;#	;I"duration-7;T;
+@;	iJ;$I"duration_7;To;#	;I"duration-8;T;
+@;	iJ;$I"duration_8;To;#	;I"duration-9;T;
+@;	iJ;$I"duration_9;To;#	;I"duration-10;T;
+@;	iJ;$I"duration_10;T;I"compact;T;%0;	iJ;
+@;[ ;0o:Sass::Tree::MixinNode;({ ;"[o;	;I"transition-duration;T;	iK;
+@;;o;#	;I"durations;T;
+@;	iK;$I"durations;To;	;I"	-moz;T;	iL;
+@;;o;	;I"-webkit;T;	iL;
+@;;o;	;I"-o;T;	iL;
+@;;o:!Sass::Script::UnaryOperation	:@operator:not;
+@;	iL:@operando;	;I"-ms;T;	iL;
+@;;o;.	;/;0;
+@;	iL;1o;	;I"-khtml;T;	iL;
+@;;o;	;I"official;T;	iL;
+@;;;
+@;I"experimental;T;%0;[ ;	iM;	iHo;
+;[I"ı/* One or more timing functions
+ *
+ * * [ ease | linear | ease-in | ease-out | ease-in-out | cubic-bezier(x1, y1, x2, y2)]
+ * * For multiple, use a comma-delimited list
+ * * These functions will effect the properties in the same list position */;T;;;	iP;
+@;[ o;!;"[[o;#;I"function-1;T;
+@;$I"function_1;To;#	;I" default-transition-function;T;
+@;	iV;$I" default_transition_function;T[o;#;I"function-2;T;
+@;$I"function_2;To;;	iW;
+@;F[o;#;I"function-3;T;
+@;$I"function_3;To;;	iX;
+@;F[o;#;I"function-4;T;
+@;$I"function_4;To;;	iY;
+@;F[o;#;I"function-5;T;
+@;$I"function_5;To;;	iZ;
+@;F[o;#;I"function-6;T;
+@;$I"function_6;To;;	i[;
+@;F[o;#;I"function-7;T;
+@;$I"function_7;To;;	i\;
+@;F[o;#;I"function-8;T;
+@;$I"function_8;To;;	i];
+@;F[o;#;I"function-9;T;
+@;$I"function_9;To;;	i^;
+@;F[o;#;I"function-10;T;
+@;$I"function_10;To;;	i_;
+@;F;T;
+@;I"transition-timing-function;T;%0;[o;;
+@;	ia;I"function-1;T;o;';({ ;"[o;#	;I"function-1;T;
+@;	ia;$I"function_1;T;I"unquote;T;%0;	ia;
+@;[ ;0o;;
+@;	ib;I"functions;T;o;';({ ;"[o;#	;I"function-1;T;
+@;	ib;$I"function_1;To;#	;I"function-2;T;
+@;	ib;$I"function_2;To;#	;I"function-3;T;
+@;	ib;$I"function_3;To;#	;I"function-4;T;
+@;	ib;$I"function_4;To;#	;I"function-5;T;
+@;	ib;$I"function_5;To;#	;I"function-6;T;
+@;	ib;$I"function_6;To;#	;I"function-7;T;
+@;	ib;$I"function_7;To;#	;I"function-8;T;
+@;	ib;$I"function_8;To;#	;I"function-9;T;
+@;	ib;$I"function_9;To;#	;I"function-10;T;
+@;	ib;$I"function_10;T;I"compact;T;%0;	ib;
+@;[ ;0o;-;({ ;"[o;	;I"transition-timing-function;T;	ic;
+@;;o;#	;I"functions;T;
+@;	ic;$I"functions;To;	;I"	-moz;T;	id;
+@;;o;	;I"-webkit;T;	id;
+@;;o;	;I"-o;T;	id;
+@;;o;.	;/;0;
+@;	id;1o;	;I"-ms;T;	id;
+@;;o;.	;/;0;
+@;	id;1o;	;I"-khtml;T;	id;
+@;;o;	;I"official;T;	id;
+@;;;
+@;I"experimental;T;%0;[ ;	ie;	i`o;
+;[I"¶/* One or more transition-delays in seconds
+ *
+ * * for multiple, use a comma-delimited list
+ * * these delays will effect the properties in the same list position */;T;;;	ih;
+@;[ o;!;"[[o;#;I"delay-1;T;
+@;$I"delay_1;To;#	;I"default-transition-delay;T;
+@;	im;$I"default_transition_delay;T[o;#;I"delay-2;T;
+@;$I"delay_2;To;;	in;
+@;F[o;#;I"delay-3;T;
+@;$I"delay_3;To;;	io;
+@;F[o;#;I"delay-4;T;
+@;$I"delay_4;To;;	ip;
+@;F[o;#;I"delay-5;T;
+@;$I"delay_5;To;;	iq;
+@;F[o;#;I"delay-6;T;
+@;$I"delay_6;To;;	ir;
+@;F[o;#;I"delay-7;T;
+@;$I"delay_7;To;;	is;
+@;F[o;#;I"delay-8;T;
+@;$I"delay_8;To;;	it;
+@;F[o;#;I"delay-9;T;
+@;$I"delay_9;To;;	iu;
+@;F[o;#;I"delay-10;T;
+@;$I"delay_10;To;;	iv;
+@;F;T;
+@;I"transition-delay;T;%0;[u;&Û[o:Sass::Script::Operation
+:@operand1o:Sass::Script::Funcall:@keywords{ :
+@args[o:Sass::Script::Variable	:
+@nameI"delay-1:ET:@options{ :
+@lineix:@underscored_nameI"delay_1;T;I"type-of;T:@splat0;ix;@:@operand2o:Sass::Script::String	:@valueI"string;T;ix;@:
+@type:identifier;@;ix:@operator:eq0[o:Sass::Tree::VariableNode;@;ix;I"delay-1;T:
+@expro;;{ ;	[o;
+	;I"delay-1;T;@;ix;I"delay_1;T;I"unquote;T;0;ix;@:@children[ :@guarded0o;;
+@;	iy;I"delays;T;o;';({ ;"[o;#	;I"delay-1;T;
+@;	iy;$I"delay_1;To;#	;I"delay-2;T;
+@;	iy;$I"delay_2;To;#	;I"delay-3;T;
+@;	iy;$I"delay_3;To;#	;I"delay-4;T;
+@;	iy;$I"delay_4;To;#	;I"delay-5;T;
+@;	iy;$I"delay_5;To;#	;I"delay-6;T;
+@;	iy;$I"delay_6;To;#	;I"delay-7;T;
+@;	iy;$I"delay_7;To;#	;I"delay-8;T;
+@;	iy;$I"delay_8;To;#	;I"delay-9;T;
+@;	iy;$I"delay_9;To;#	;I"delay-10;T;
+@;	iy;$I"delay_10;T;I"compact;T;%0;	iy;
+@;[ ;0o;-;({ ;"[o;	;I"transition-delay;T;	iz;
+@;;o;#	;I"delays;T;
+@;	iz;$I"delays;To;	;I"	-moz;T;	i{;
+@;;o;	;I"-webkit;T;	i{;
+@;;o;	;I"-o;T;	i{;
+@;;o;.	;/;0;
+@;	i{;1o;	;I"-ms;T;	i{;
+@;;o;.	;/;0;
+@;	i{;1o;	;I"-khtml;T;	i{;
+@;;o;	;I"official;T;	i{;
+@;;;
+@;I"experimental;T;%0;[ ;	i|;	iwo;
+;[I"*/* Transition all-in-one shorthand */;T;;;	i;
+@;[ o;!;"[	[o;#;I"property;T;
+@;$I"property;To;#	;I" default-transition-property;T;
+@;	i};$I" default_transition_property;T[o;#;I"duration;T;
+@;$I"duration;To;#	;I" default-transition-duration;T;
+@;	i~;$I" default_transition_duration;T[o;#;I"function;T;
+@;$I"function;To;#	;I" default-transition-function;T;
+@;	i;$I" default_transition_function;T[o;#;I"
+delay;T;
+@;$I"
+delay;To;#	;I"default-transition-delay;T;
+@;	iÄ;$I"default_transition_delay;T;T;
+@;I"single-transition;T;%0;[o;-;({ ;"[o;';({ ;"[o;	;:
+space;	iÇ;[	o;#	;I"property;T;
+@;	iÇ;$I"property;To;#	;I"duration;T;
+@;	iÇ;$I"duration;To;#	;I"function;T;
+@;	iÇ;$I"function;To;#	;I"
+delay;T;
+@;	iÇ;$I"
+delay;T;
+@;I"compact;T;%0;	iÇ;
+@;
+@;I"transition;T;%0;[ ;	iÇ;	iÅo;!;"[[o;#;I"transition-1;T;
+@;$I"transition_1;To;	;I"default;T;	iÜ;
+@;;[o;#;I"transition-2;T;
+@;$I"transition_2;To;;	iá;
+@;F[o;#;I"transition-3;T;
+@;$I"transition_3;To;;	ià;
+@;F[o;#;I"transition-4;T;
+@;$I"transition_4;To;;	iâ;
+@;F[o;#;I"transition-5;T;
+@;$I"transition_5;To;;	iä;
+@;F[o;#;I"transition-6;T;
+@;$I"transition_6;To;;	iã;
+@;F[o;#;I"transition-7;T;
+@;$I"transition_7;To;;	iå;
+@;F[o;#;I"transition-8;T;
+@;$I"transition_8;To;;	iç;
+@;F[o;#;I"transition-9;T;
+@;$I"transition_9;To;;	ié;
+@;F[o;#;I"transition-10;T;
+@;$I"transition_10;To;;	iè;
+@;F;T;
+@;I"transition;T;%0;[u;&9[o:Sass::Script::Operation
+:@operand1o:Sass::Script::Variable	:
+@nameI"transition-1:ET:@options{ :
+@lineië:@underscored_nameI"transition_1;	T:@operand2o:Sass::Script::String	:@valueI"default;	T;ië;
+@	:
+@type:identifier;
+@	;ië:@operator:eq0[o:Sass::Tree::VariableNode;
+@	;ií;I"transition-1;	T:
+@expro:Sass::Script::Funcall:@keywords{ :
+@args[o:Sass::Script::List	:@separator:
+space;ií;[	o;	;I" default-transition-property;	T;
+@	;ií;I" default_transition_property;	To;	;I" default-transition-duration;	T;
+@	;ií;I" default_transition_duration;	To;	;I" default-transition-function;	T;
+@	;ií;I" default_transition_function;	To;	;I"default-transition-delay;	T;
+@	;ií;I"default_transition_delay;	T;
+@	;I"compact;	T:@splat0;ií;
+@	:@children[ :@guarded0o;;
+@;	iî;I"transitions;T;o;;	iî;
+@;F;[ ;0u;&ü[o:Sass::Script::Operation
+:@operand1o; 
+;o:Sass::Script::Funcall:@keywords{ :
+@args[o:Sass::Script::Variable	:
+@nameI"transition-1:ET:@options{ :
+@lineiï:@underscored_nameI"transition_1;T;I"type-of;T:@splat0;iï;@:@operand2o:Sass::Script::String	:@valueI"	list;T;iï;@:
+@type:identifier;@;iï:@operator:eq;o; 
+;o;;{ ;	[o;;{ ;	[o;
+	;I"transition-1;T;@;iï;I"transition_1;To:Sass::Script::Number:@originalI"1;F:@numerator_units[ ;i:@denominator_units[ ;@;iï;I"nth;T;0;iï;@;I"type-of;T;0;iï;@;o;	;I"	list;T;iï;@;;;@;iï;;;@;iï;:andu:Sass::Tree::IfNode[00[o:Sass::Tree::VariableNode:@options{ :
+@lineiò:
+@nameI"transitions:ET:
+@expro:Sass::Script::Funcall:@keywords{ :
+@args[o:Sass::Script::Variable	;I"transition-1;	T;@;iò:@underscored_nameI"transition_1;	To;	;I"transition-2;	T;@;iò;I"transition_2;	To;	;I"transition-3;	T;@;iò;I"transition_3;	To;	;I"transition-4;	T;@;iò;I"transition_4;	To;	;I"transition-5;	T;@;iò;I"transition_5;	To;	;I"transition-6;	T;@;iò;I"transition_6;	To;	;I"transition-7;	T;@;iò;I"transition_7;	To;	;I"transition-8;	T;@;iò;I"transition_8;	To;	;I"transition-9;	T;@;iò;I"transition_9;	To;	;I"transition-10;	T;@;iò;I"transition_10;	T;I"compact;	T:@splat0;iò;@:@children[ :@guarded0[o:Sass::Tree::VariableNode;@;iñ;I"transitions;T:
+@expro;;{ ;	[o;
+	;I"transition-1;T;@;iñ;I"transition_1;To;;{ ;	[o;
+	;I"transition-2;T;@;iñ;I"transition_2;To;
+	;I"transition-3;T;@;iñ;I"transition_3;To;
+	;I"transition-4;T;@;iñ;I"transition_4;To;
+	;I"transition-5;T;@;iñ;I"transition_5;To;
+	;I"transition-6;T;@;iñ;I"transition_6;To;
+	;I"transition-7;T;@;iñ;I"transition_7;To;
+	;I"transition-8;T;@;iñ;I"transition_8;To;
+	;I"transition-9;T;@;iñ;I"transition_9;To;
+	;I"transition-10;T;@;iñ;I"transition_10;T;I"compact;T;0;iñ;@o;	;I"
+comma;T;iñ;@;;;I"	join;T;0;iñ;@:@children[ :@guarded0o;;
+@;	iö;I"delays;T;o;';({ ;"[ ;I"comma-list;T;%0;	iö;
+@;[ ;0o;;
+@;	iõ;I"has-delays;T;o;;	iõ;
+@;F;[ ;0o;;
+@;	iú;I"webkit-value;T;o;';({ ;"[ ;I"comma-list;T;%0;	iú;
+@;[ ;0o;;
+@;	iù;I"moz-value;T;o;';({ ;"[ ;I"comma-list;T;%0;	iù;
+@;[ ;0o;;
+@;	iû;I"o-value;T;o;';({ ;"[ ;I"comma-list;T;%0;	iû;
+@;[ ;0o;
+;[I"ò/* This block can be made considerably simpler at the point in time that
+ * we no longer need to deal with the differences in how delays are treated. */;T;;;	i†;
+@;[ o:Sass::Tree::EachNode:	@varI"transition;T;T:
+@listo;#	;I"transitions;T;
+@;	i¢;$I"transitions;T;	i¢;
+@;[o;
+;[I"}/* Extract the values from the list
+ * (this would be cleaner if nth took a 3rd argument to provide a default value). */;T;;;	i£;
+@;[ o;;
+@;	i•;I"property;T;o;';({ ;"[o;#	;I"transition;T;
+@;	i•;$I"transition;To;;I"1;F;[ ;i;[ ;
+@;	i•;I"nth;T;%0;	i•;
+@;[ ;0o;;
+@;	i¶;I"duration;T;o;;	i¶;
+@;F;[ ;0o;;
+@;	iß;I"timing-function;T;o;;	iß;
+@;F;[ ;0o;;
+@;	i®;I"
+delay;T;o;;	i®;
+@;F;[ ;0u;&D[o:Sass::Script::Operation
+:@operand1o:Sass::Script::Funcall:@keywords{ :
+@args[o:Sass::Script::Variable	:
+@nameI"transition:ET:@options{ :
+@linei©:@underscored_nameI"transition;T;I"length;T:@splat0;i©;@:@operand2o:Sass::Script::Number:@originalI"1;F:@numerator_units[ :@valuei:@denominator_units[ ;@;i©;@;i©:@operator:gt0[o:Sass::Tree::VariableNode;@;i©;I"duration;T:
+@expro;;{ ;	[o;
+	;I"transition;T;@;i©;I"transition;To;;I"2;F;[ ;i;@;@;i©;I"nth;T;0;i©;@:@children[ :@guarded0u;&K[o:Sass::Script::Operation
+:@operand1o:Sass::Script::Funcall:@keywords{ :
+@args[o:Sass::Script::Variable	:
+@nameI"transition:ET:@options{ :
+@linei™:@underscored_nameI"transition;T;I"length;T:@splat0;i™;@:@operand2o:Sass::Script::Number:@originalI"2;F:@numerator_units[ :@valuei:@denominator_units[ ;@;i™;@;i™:@operator:gt0[o:Sass::Tree::VariableNode;@;i™;I"timing-function;T:
+@expro;;{ ;	[o;
+	;I"transition;T;@;i™;I"transition;To;;I"3;F;[ ;i;@;@;i™;I"nth;T;0;i™;@:@children[ :@guarded0u;&å[o:Sass::Script::Operation
+:@operand1o:Sass::Script::Funcall:@keywords{ :
+@args[o:Sass::Script::Variable	:
+@nameI"transition:ET:@options{ :
+@linei´:@underscored_nameI"transition;T;I"length;T:@splat0;i´;@:@operand2o:Sass::Script::Number:@originalI"3;F:@numerator_units[ :@valuei:@denominator_units[ ;@;i´;@;i´:@operator:gt0[o:Sass::Tree::VariableNode;@;i´;I"
+delay;T:
+@expro;;{ ;	[o;
+	;I"transition;T;@;i´;I"transition;To;;I"4;F;[ ;i	;@;@;i´;I"nth;T;0;i´;@:@children[ :@guarded0o;;@;i´;I"has-delays;T;o:Sass::Script::Bool;i´;@;T;[ ;0o;
+;[I";/* If a delay is provided without a timing function */;T;;;	i≠;
+@;[ u;&ö[o:Sass::Script::Operation
+:@operand1o:Sass::Script::Funcall:@keywords{ :
+@args[o:Sass::Script::Variable	:
+@nameI"timing-function:ET:@options{ :
+@lineiÆ:@underscored_nameI"timing_function;T;I"is-time;T:@splat0;iÆ;@:@operand2o:!Sass::Script::UnaryOperation	:@operator:not;@;iÆ:@operando;
+	;I"
+delay;T;@;iÆ;I"
+delay;T;@;iÆ;:and0[o:Sass::Tree::VariableNode;@;iÆ;I"
+delay;T:
+@expro;
+	;I"timing-function;T;@;iÆ;I"timing_function;T:@children[ :@guarded0o;;@;iÆ;I"timing-function;T;o:Sass::Script::Bool;iÆ;@:@valueF;[ ;0o;;@;iÆ;I"has-delays;T;o;;iÆ;@;T;[ ;0o;
+;[I"9/* Keep a list of delays in case one is specified */;T;;;	i∞;
+@;[ o;;
+@;	i±;I"delays;T;o;';({ ;"[o;#	;I"delays;T;
+@;	i±;$I"delays;To;';({ ;"[o;#	;I"
+delay;T;
+@;	i±;$I"
+delay;To;#	;I"
+delay;T;
+@;	i±;$I"
+delay;To;;I"0s;F;[I"s;T;i ;[ ;
+@;	i±;I"if;T;%0;	i±;
+@;I"append;T;%0;	i±;
+@;[ ;0o;;
+@;	i≥;I"webkit-value;T;o;';({ ;"[o;#	;I"webkit-value;T;
+@;	i≥;$I"webkit_value;To;';({ ;"[o;	;;2;	i≥;[o;';({ ;"[o;	;I"-webkit;T;	i≥;
+@;;o;#	;I"property;T;
+@;	i≥;$I"property;T;I"prefixed-for-transition;T;%0;	i≥;
+@o;#	;I"duration;T;
+@;	i≥;$I"duration;To;#	;I"timing-function;T;
+@;	i≥;$I"timing_function;T;
+@;I"compact;T;%0;	i≥;
+@;I"append;T;%0;	i≥;
+@;[ ;0o;;
+@;	i¥;I"moz-value;T;o;';({ ;"[o;#	;I"moz-value;T;
+@;	i¥;$I"moz_value;To;';({ ;"[o;	;;2;	i¥;[	o;';({ ;"[o;	;I"	-moz;T;	i¥;
+@;;o;#	;I"property;T;
+@;	i¥;$I"property;T;I"prefixed-for-transition;T;%0;	i¥;
+@o;#	;I"duration;T;
+@;	i¥;$I"duration;To;#	;I"timing-function;T;
+@;	i¥;$I"timing_function;To;#	;I"
+delay;T;
+@;	i¥;$I"
+delay;T;
+@;I"compact;T;%0;	i¥;
+@;I"append;T;%0;	i¥;
+@;[ ;0o;;
+@;	iµ;I"o-value;T;o;';({ ;"[o;#	;I"o-value;T;
+@;	iµ;$I"o_value;To;';({ ;"[o;	;;2;	iµ;[	o;';({ ;"[o;	;I"-o;T;	iµ;
+@;;o;#	;I"property;T;
+@;	iµ;$I"property;T;I"prefixed-for-transition;T;%0;	iµ;
+@o;#	;I"duration;T;
+@;	iµ;$I"duration;To;#	;I"timing-function;T;
+@;	iµ;$I"timing_function;To;#	;I"
+delay;T;
+@;	iµ;$I"
+delay;T;
+@;I"compact;T;%0;	iµ;
+@;I"append;T;%0;	iµ;
+@;[ ;0u;&[o:Sass::Script::Variable	:
+@nameI"$experimental-support-for-webkit:ET:@options{ :
+@linei∏:@underscored_nameI"$experimental_support_for_webkit;T0[o:Sass::Tree::PropNode:
+@tabsi :@valueo; 	;I"webkit-value;T;@;	i∏;
+I"webkit_value;T;@;[I"-webkit-transition;T;	i∏:@children[ :@prop_syntax:newo:Sass::Tree::CommentNode
+;[I"j/* old webkit doesn't support the delay parameter in the shorthand so we progressively enhance it. */;T:
+@type:silent;	iπ;@;[ u:Sass::Tree::IfNode[o:Sass::Script::Variable	:
+@nameI"has-delays:ET:@options{ :
+@linei∫:@underscored_nameI"has_delays;T0[o:Sass::Tree::PropNode:
+@tabsi :@valueo; 	;I"delays;T;@;	i∫;
+I"delays;T;@;[I"-webkit-transition-delay;T;	i∫:@children[ :@prop_syntax:newu;&=[o:Sass::Script::Variable	:
+@nameI"%experimental-support-for-mozilla:ET:@options{ :
+@lineiª:@underscored_nameI"%experimental_support_for_mozilla;T0[o:Sass::Tree::PropNode:
+@tabsi :@valueo; 	;I"moz-value;T;@;	iª;
+I"moz_value;T;@;[I"-moz-transition;T;	iª:@children[ :@prop_syntax:newu;&3[o:Sass::Script::Variable	:
+@nameI"#experimental-support-for-opera:ET:@options{ :
+@lineiº:@underscored_nameI"#experimental_support_for_opera;T0[o:Sass::Tree::PropNode:
+@tabsi :@valueo; 	;I"o-value;T;@;	iº;
+I"o_value;T;@;[I"-o-transition;T;	iº:@children[ :@prop_syntax:newo;);*i ;o;#	;I"transitions;T;
+@;	iΩ;$I"transitions;T;
+@;[I"transition;T;	iΩ;[ ;+;,;	iêo;
+;[I"Y/* coerce a list to be comma delimited or make a new, empty comma delimited list. */;T;;;	i¿;
+@;[ o:Sass::Tree::FunctionNode;"[[o;#;I"	list;T;
+@;$I"	list;To;	;;2;	i¡;[ ;
+@;T;
+@;I"comma-list;T;%0;[o:Sass::Tree::ReturnNode	;o;';({ ;"[o;	;;2;	i¬;[ ;
+@o;#	;I"	list;T;
+@;	i¬;$I"	list;To;	;I"
+comma;T;	i¬;
+@;;;I"	join;T;%0;	i¬;
+@;	i¬;[ ;
+@;	i¡o;
+;[I"i/* Returns `$property` with the given prefix if it is found in `$transitionable-prefixed-values`. */;T;;;	i≈;
+@;[ o;6;"[[o;#;I"prefix;T;
+@;$I"prefix;T0[o;#;I"property;T;
+@;$I"property;T0;T;
+@;I"prefixed-for-transition;T;%0;[u;&Q[o:Sass::Script::Operation
+:@operand1o:Sass::Script::Funcall:@keywords{ :
+@args[o:Sass::Script::Variable	:
+@nameI"property:ET:@options{ :
+@linei«:@underscored_nameI"property;T;I"type-of;T:@splat0;i«;@:@operand2o:Sass::Script::String	:@valueI"	list;T;i«;@:
+@type:identifier;@;i«:@operator:equ:Sass::Tree::IfNodeó[00[u:Sass::Tree::IfNodew[o:Sass::Script::Funcall:@keywords{ :
+@args[o:Sass::Script::Variable	:
+@nameI"#transitionable-prefixed-values:ET:@options{ :
+@lineiŒ:@underscored_nameI"#transitionable_prefixed_values;
+To;	;	I"property;
+T;@;iŒ;I"property;
+T;	I"
+index;
+T:@splat0;iŒ;@u:Sass::Tree::IfNode®[00[o:Sass::Tree::ReturnNode	:
+@expro:Sass::Script::Variable	:
+@nameI"property:ET:@options{ :
+@linei—:@underscored_nameI"property;	T;i—:@children[ ;
+@
+[o:Sass::Tree::ReturnNode	:
+@expro: Sass::Script::Interpolation;@:@whitespace_beforeiî:@before0;iœ:	@mido;	;	I"prefix;
+T;@;iœ;I"prefix;
+T:@whitespace_after0:@originally_textF:@aftero;;@;0;o;;@;0;0;iœ;o:Sass::Script::String	:@valueI"-;
+F;iœ;@:
+@type:identifier;F;:originally_text;0;iœ;o;	;	I"property;
+T;@;iœ;I"property;
+T;0;F;0;iœ:@children[ ;@[o:Sass::Tree::VariableNode;@;i»;I"new-list;T:
+@expro;;{ ;	[ ;I"comma-list;T;0;i»;@:@children[ :@guarded0o:Sass::Tree::EachNode:	@varI"v;T:@has_childrenT:
+@listo;
+	;I"property;T;@;i…;I"property;T;i…;@;[o;;@;i ;I"new-list;T;o;;{ ;	[o;
+	;I"new-list;T;@;i ;I"new_list;To;;{ ;	[o;
+	;I"prefix;T;@;i ;I"prefix;To;
+	;I"v;T;@;i ;I"v;T;I"prefixed-for-transition;T;0;i ;@;I"append;T;0;i ;@;[ ;0o:Sass::Tree::ReturnNode	;o;
+	;I"new-list;T;@;iÃ;I"new_list;T;iÃ;[ ;@;	i∆o;
+;[I"7/* Checks if the value given is a unit of time. */;T;;;	i÷;
+@;[ o;6;"[[o;#;I"
+value;T;
+@;$I"
+value;T0;T;
+@;I"is-time;T;%0;[u;&;[o:Sass::Script::Operation
+:@operand1o:Sass::Script::Funcall:@keywords{ :
+@args[o:Sass::Script::Variable	:
+@nameI"
+value:ET:@options{ :
+@lineiÿ:@underscored_nameI"
+value;T;I"type-of;T:@splat0;iÿ;@:@operand2o:Sass::Script::String	:@valueI"number;T;iÿ;@:
+@type:identifier;@;iÿ:@operator:equ:Sass::Tree::IfNodey[00[o:Sass::Tree::ReturnNode	:
+@expro:Sass::Script::Bool:
+@linei€:@options{ :@valueF;i€:@children[ ;	@	[o:Sass::Tree::ReturnNode	:
+@expro:!Sass::Script::UnaryOperation	;:not;@;iŸ:@operando;	;;;@;iŸ;o;;{ ;	[o:Sass::Script::List	:@separator:
+space;iŸ;[o;	;I"s;T;iŸ;@;;o;	;I"ms;T;iŸ;@;;;@o;;{ ;	[o;
+	;I"
+value;T;@;iŸ;I"
+value;T;I"	unit;T;0;iŸ;@;I"
+index;T;0;iŸ;@;iŸ:@children[ ;@;	i◊
